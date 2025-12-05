@@ -43,6 +43,11 @@ const routes = [
         component: () => import("../views/SendMessage/Websocket.vue"),
       },
       {
+        path: "/document-preview/pdf",
+        name: "pdf-preview",
+        component: () => import("../views/DocumentPreview/PdfPreview.vue"),
+      },
+      {
         path: "/page1",
         name: "page1",
         component: () => import("../views/Page1.vue"),

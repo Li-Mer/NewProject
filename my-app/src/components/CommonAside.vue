@@ -114,6 +114,21 @@ const list = ref([
     ]
   },
   {
+    path: "/document-preview",
+    name: "document-preview",
+    label: "文档预览",
+    icon: "document",
+    children: [
+      {
+        path: "/document-preview/pdf",
+        name: "pdf-preview",
+        label: "PDF预览",
+        icon: "setting",
+        url: "PdfPreview",
+      },
+    ]
+  },
+  {
     path: "other",
     label: "其他",
     icon: "location",
