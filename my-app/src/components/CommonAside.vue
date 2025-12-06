@@ -111,6 +111,13 @@ const list = ref([
         icon: "setting",
         url: "WebSocketMessage",
       },
+      {
+        path: "/send-message/sse",
+        name: "sse",
+        label: "SSE通讯",
+        icon: "setting",
+        url: "SSE",
+      }
     ]
   },
   {
