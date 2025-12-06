@@ -3064,7 +3064,7 @@
 @media (prefers-color-scheme: dark){
 
 :is(.annotationLayer,.annotationEditorLayer) .annotationCommentButton{
-    --csstools-color-scheme--light:;
+    /* --csstools-color-scheme--light:; */
   }
 }
 
@@ -6036,6 +6036,8 @@ body.wait::before{
   height:100%;
   position:relative;
   margin:0;
+  border: 2px solid grey;
+  box-sizing: border-box;
 }
 
 #sidebarContainer{
