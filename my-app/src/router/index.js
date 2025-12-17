@@ -53,6 +53,11 @@ const routes = [
         component: () => import("../views/DocumentPreview/PdfPreview.vue"),
       },
       {
+        path: "/form-validator/easy",
+        name: "form-validator-easy",
+        component: () => import("../views/FormValidator/FormValidatorEasy.vue"),
+      },
+      {
         path: "/page1",
         name: "page1",
         component: () => import("../views/Page1.vue"),

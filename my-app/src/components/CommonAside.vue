@@ -136,6 +136,19 @@ const list = ref([
     ]
   },
   {
+    path:"/form-validator",
+    label:"表单验证",
+    icon:"document",
+    children: [
+      {
+        path: "/form-validator/easy",
+        name: "form-validator-easy",
+        label: "简单验证",
+        icon: "setting",
+        url: "FormValidatorEasy",
+      }]
+  },
+  {
     path: "other",
     label: "其他",
     icon: "location",

@@ -11,6 +11,7 @@
     "lint:fix": "eslint src --ext .js,.vue --fix"
   },
   "dependencies": {
+    "async-validator": "^4.2.5",
     "axios": "^1.13.2",
     "rrweb": "^2.0.0-alpha.4",
     "spark-md5": "^3.0.2",
