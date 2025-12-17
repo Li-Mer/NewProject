@@ -24,6 +24,7 @@
 import { reactive, ref } from 'vue';
 import AsyncValidator from 'async-validator';
 import { ElMessage } from 'element-plus';
+import axios from 'axios';
 
 const formData = reactive({
     username: '',
@@ -49,6 +50,68 @@ const registerRulesEasy = {
     ]
 };
 
+//进阶校验
+//增加密码强度校验（一个大写，一个小写，一个数字）
+//用户名唯一性校验（异步请求：调用后端接口检查用户名是否已经存在）
+const registerRulesAdvanced = {
+    username: [
+        { required: true, message: "用户名不能为空" },
+        { min: 3, max: 15, message: "用户名长度应在3到15个字符之间" },
+        {
+            validator: async (rule, value, callback) => {
+                // 模拟异步请求检查用户名唯一性
+                try {
+                    const isUsernameExist = await checkUsernameExist(value);
+                    if (isUsernameExist) {
+                        callback(new Error('用户名已存在，请选择其他用户名'));
+                    } else {
+                        callback();
+                    }
+                } catch (error) {
+                    // 如果接口挂了，通常选择放行或者提示网络错误
+                    // 这里选择放行，避免阻断用户
+                    console.error("验证用户名失败:", error);
+                    callback(); 
+                }
+            }
+        }
+    ],
+    password: [
+        { required: true, message: "密码不能为空" },
+        { 
+            validator: (rule, value, callback) => {
+                const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+                if (!reg.test(value)) {
+                    callback(new Error('密码需包含大写字母、小写字母和数字，长度 6-16 字符'));
+                } else {
+                    callback();
+                }
+            }
+        }
+    ],
+    confirmPassword: [
+        { required: true, message: "请确认密码" },
+        {
+            validator: (rule, value, callback) => {
+                if (value !== formData.password) {
+                    callback(new Error('两次输入的密码不一致'));
+                } else {
+                    callback();
+                }
+            }
+        }
+    ]
+}
+const checkUsernameExist = async (username) => {
+    try {
+        const response = await axios.get('/api/checkUsername', {
+            params: { username }
+        });
+        return response.data.exists;
+    }catch (error) {
+        throw error;
+    }
+}
 const submitForm = async () => {
     try {
         await formRef.value.validate();
@@ -70,7 +133,7 @@ const submitForm = async () => {
   padding: 20px;
 }
 .register-form{
-    width: 400px;
+    width: 500px;
     margin-top: 20px;
     box-sizing: border-box;
     h2{
