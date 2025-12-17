@@ -22,58 +22,86 @@
             style="width: 300px; margin-right: 8px;"
         />
         <el-button @click="sendMessage" type="primary">发送</el-button>   
+        <el-switch v-model="enableReconn" active-text="重连开" inactive-text="重连关" style="margin-left:12px;" />
+        <el-button @click="simulateDrop" type="danger" plain style="margin-left:8px;">模拟断开</el-button>
     </div>
   </el-card>
 </template>
 
 <script setup>
 import { ElNotification } from 'element-plus';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref,onUnmounted,watch } from 'vue';
+import Socket from '../../api/socket.js'; 
 
 let socket = null;
 const inputValue = ref('');
 const lists = ref([]);
 const user = Math.floor(Math.random() * 10) + 1;
 
+const enableReconn = ref(false);// 是否启用重连
+
 const connectWebSocket = () => {
-    socket = new WebSocket('ws://localhost:3000');
+    socket = new Socket({
+        url: 'ws://localhost:3000',
+        name: "",
+        isHeart: true,
+        isReconnection: enableReconn.value,
+        received:function(event){
+            console.log('收到消息：', event.data);
+            const data = JSON.parse(event.data);
+            lists.value.push({
+                username: data.name,
+                value: data.value
+            });
+        }
+    });
+    let data = {
+        type:"init",
+    }
+    socket.connect(data);
 
-    //实例对象的onopen属性，用于指定连接成功后的回调函数
-    socket.onopen = () => {
-        ElNotification({
-            title: '成功',
-            message: '连接成功！',
-            type: 'success',
-        });
-    };
-    socket.onerror = (error) => {
-        ElNotification({
-            title: '错误',
-            message: '连接失败！',
-            type: 'error',
-        });
-    } 
-
-    socket.onmessage = (event) => {
-        console.log('收到消息：', event.data);
-        const data = JSON.parse(event.data);
-        lists.value.push({
-            username: data.name,
-            value: data.value
-        });
-    };
+    
 };
 const sendMessage = () => {
-    //用户名
-    //消息
-    const message = {
-        name: `用户${user}`,
-        value: inputValue.value
-    }
-    socket.send(JSON.stringify(message));
+  if (!socket || socket.ws?.readyState !== WebSocket.OPEN) {
+    ElNotification({ title: '提示', message: '连接未就绪', type: 'warning' });
+    return;
+  }
+  const message = {
+    name: `用户${user}`,
+    value: inputValue.value,
+  };
+  socket.sendMsg(message);
+  inputValue.value = '';
 };
+const onDisconnect = () => {
+    socket.close();
+};
+
+// const simulateDrop = () => {
+//   if (socket) {
+//     console.warn('手动关闭以测试重连');
+//     socket.close(4000, 'test drop'); // 触发 onclose，看是否重连
+//   }
+// };
+const simulateDrop = () => {
+  if (socket?.ws) {
+    console.warn('手动关闭以测试重连');
+    socket.ws.close(4000, 'test drop'); // 不改 status，触发 onclose -> closeSocket 重连
+  }
+};
+
+// 开关变化时同步到实例
+watch(enableReconn, (val) => {
+  if (socket) socket.isReconnection = val;
+});
+
+
 onMounted(() => {
     connectWebSocket();
+})
+onUnmounted(() => {
+    onDisconnect();
 })
 </script>
 
