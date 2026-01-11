@@ -146,7 +146,15 @@ const list = ref([
         label: "简单验证",
         icon: "setting",
         url: "FormValidatorEasy",
-      }]
+      },
+      {
+        path: "/form-validator/difficult",
+        name: "form-validator-difficult",
+        label: "复杂验证",
+        icon: "setting",
+        url: "FormValidatorDifficult",
+      }
+    ]
   },
   {
     path: "other",

@@ -3,7 +3,7 @@
     <h1>简单验证</h1>
     <el-card class="register-form" style="border-radius: 20px; padding: 20px;">
         <h2>欢迎注册</h2>
-        <el-form class="form" :model="formData" :rules="registerRulesEasy" ref="formRef" label-width="80px">
+        <el-form class="form" :model="formData" :rules="registerRulesAdvanced" ref="formRef" label-width="80px">
             <el-form-item label="用户名" prop="username">
                 <el-input v-model="formData.username"  placeholder="请输入用户名"></el-input>
             </el-form-item>
@@ -24,7 +24,7 @@
 import { reactive, ref } from 'vue';
 import AsyncValidator from 'async-validator';
 import { ElMessage } from 'element-plus';
-import axios from 'axios';
+import axios from '../../api/request';
 
 const formData = reactive({
     username: '',

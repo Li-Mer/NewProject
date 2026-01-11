@@ -58,6 +58,12 @@ const routes = [
         component: () => import("../views/FormValidator/FormValidatorEasy.vue"),
       },
       {
+        path: "/form-validator/difficult",
+        name: "form-validator-difficult",
+        component: () =>
+          import("../views/FormValidator/FormValidatorDifficult.vue"),
+      },
+      {
         path: "/page1",
         name: "page1",
         component: () => import("../views/Page1.vue"),
