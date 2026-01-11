@@ -1,4 +1,12 @@
 {
+  "name": "newproject",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n FE,BE -c cyan,magenta \"npm run dev:fe\" \"npm run dev:be\"",
+    "dev:fe": "npm --prefix my-app run dev",
+    "dev:be": "nodemon --watch nodeServe --ext js,json nodeServe/serve.js",
+    "install:fe": "npm --prefix my-app install"
+  },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "cors": "^2.8.5",
@@ -17,5 +25,8 @@
     "nodemon": "^3.1.11",
     "vue-router": "^4.6.3",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
